@@ -1,28 +1,30 @@
 version: '3.3'
 services:
-    homer:
-        container_name: homer
-        image: 'b4bz/homer:latest'
-        ports:
-        - '83:8080'
-        volumes:
-        - 'homer:/www/assets'
-        restart: unless-stopped
-    flame:
-        container_name: flame
-        image: 'pawelmalak/flame:latest'
-        ports:
-        - 5005:5005
-        volumes:
-        - flame:/app/data
-        - /var/run/docker.sock:/var/run/docker.sock
-        environment:
-        - PASSWORD=${flame_PASSWORD}
-        restart: unless-stopped
+  flame:
+    container_name: flame
+    image: 'pawelmalak/flame:latest'
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - flame:/app/data
+    environment:
+    - PASSWORD=${flame_PASSWORD}
+    ports:
+    - 5005:5005
+    restart: unless-stopped
+  homer:
+    container_name: homer
+    image: 'b4bz/homer:latest'
+    volumes:
+    - homer:/www/assets
+    ports:
+    - 83:8080
+    restart: unless-stopped
 volumes:
-    homer:
-        name: homer
-        driver: local
-    flame:
-        name: flame
-        driver: local
+  flame:
+    name: flame
+    driver: local
+    external: false
+  homer:
+    name: homer
+    driver: local
+    external: false

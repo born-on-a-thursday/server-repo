@@ -1,115 +1,121 @@
 version: '3.3'
 services:
-    transmission-openvpn:
-        container_name: transmission-openvpn
-        image: 'haugene/transmission-openvpn:latest'
-        ports:
-        - '9091:9091'
-        volumes:
-        - 'transmission-openvpn:/data'
-        - 'media:/data/media'
-        - 'transmission-openvpn_config:/config'
-        cap_add:
-        - 'NET_ADMIN'
-        environment:
-        - 'PUID=1000'
-        - 'PGID=1000'
-        - 'CREATE_TUN_DEVICE=true'
-        - 'OPENVPN_PROVIDER=NORDVPN'
-        - 'OPENVPN_USERNAME=${transmissionopenvpn_OPENVPN_USERNAME}'
-        - 'OPENVPN_PASSWORD=${transmissionopenvpn_OPENVPN_PASSWORD}'
-        - 'WEBPROXY_ENABLED=false'
-        - 'LOCAL_NETWORK=203.7.7.0/24'
-        - 'NORDVPN_COUNTRY=SE'
-        - 'NORDVPN_PROTOCOL=tcp'
-        - 'NORDVPN_CATEGORY=legacy_p2p'
-        - 'TZ=Europe/Stockholm'
-        - 'ratio-limit=0'
-        - 'ratio-limit-enabled=1'
-        - 'TRANSMISSION_DOWNLOAD_DIR=${transmissionopenvpn_TRANSMISSION_DOWNLOAD_DIR}'
-        - 'TRANSMISSION_INCOMPLETE_DIR=${transmissionopenvpn_TRANSMISSION_INCOMPLETE_DIR}'
-        - 'TRANSMISSION_WATCH_DIR=${transmissionopenvpn_TRANSMISSION_WATCH_DIR}'
-        - 'TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true'
-        - 'TRANSMISSION_RPC_ENABLED=true'
-        - 'TRANSMISSION_RPC_USERNAME=${transmissionopenvpn_TRANSMISSION_RPC_USERNAME}'
-        - 'TRANSMISSION_RPC_PASSWORD=${transmissionopenvpn_TRANSMISSION_RPC_PASSWORD}'
-        logging:
-            driver: json-file
-            options:
-                max-size: 10m
-        restart: unless-stopped
-    transmission-openvpn-proxy:
-        container_name: transmission-openvpn-proxy
-        image: 'haugene/transmission-openvpn-proxy:latest'
-        ports:
-        - '8080:8080'
-        volumes:
-        - 'transmission-openvpn-proxy:/data'
-        links:
-        - 'transmission-openvpn:transmission'
-        restart: unless-stopped
-    radarr:
-        container_name: radarr
-        image: 'lscr.io/linuxserver/radarr:latest'	
-        ports:
-        - '7878:7878'
-        volumes:
-        - 'radarr:/config'
-        - 'media:/data/media'
-        environment:
-        - 'PUID=1000'
-        - 'PGID=1000'
-        - 'TZ=Europe/Stockholm'
-        restart: unless-stopped
-    sonarr:
-        container_name: sonarr
-        image: 'lscr.io/linuxserver/sonarr:latest'
-        ports:
-        - '8989:8989'
-        volumes:
-        - 'sonarr:/config'
-        - 'media:/data/media'
-        environment:
-        - 'PUID=1000'
-        - 'PGID=1000'
-        - 'TZ=Europe/Stockholm'
-        restart: unless-stopped
-    jackett:
-        container_name: jackett
-        image: 'lscr.io/linuxserver/jackett:latest'
-        ports:
-        - '9117:9117'
-        volumes:
-        - 'jackett:/config'
-        - 'downloads:/data/downloads'
-        environment:
-        - 'PUID=1000'
-        - 'PGID=1000'
-        - 'TZ=Europe/Stockholm'
-        - 'AUTO_UPDATE=true'
-        restart: unless-stopped
+  jackett:
+    container_name: jackett
+    image: 'lscr.io/linuxserver/jackett:latest'
+    volumes:
+    - downloads:/data/downloads
+    - jackett:/config
+    environment:
+    - AUTO_UPDATE=true
+    - PGID=1000
+    - PUID=1000
+    - TZ=Europe/Stockholm
+    ports:
+    - 9117:9117
+    restart: unless-stopped
+  radarr:
+    container_name: radarr
+    image: 'lscr.io/linuxserver/radarr:latest'
+    volumes:
+    - media:/data/media
+    - radarr:/config
+    environment:
+    - PGID=1000
+    - PUID=1000
+    - TZ=Europe/Stockholm
+    ports:
+    - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    container_name: sonarr
+    image: 'lscr.io/linuxserver/sonarr:latest'
+    volumes:
+    - media:/data/media
+    - sonarr:/config
+    environment:
+    - PGID=1000
+    - PUID=1000
+    - TZ=Europe/Stockholm
+    ports:
+    - 8989:8989
+    restart: unless-stopped
+  transmission-openvpn:
+    container_name: transmission-openvpn
+    image: 'haugene/transmission-openvpn:latest'
+    volumes:
+    - media:/data/media
+    - transmission-openvpn_config:/config
+    - transmission-openvpn:/data
+    environment:
+    - CREATE_TUN_DEVICE=true
+    - LOCAL_NETWORK=203.7.7.0/24
+    - NORDVPN_CATEGORY=legacy_p2p
+    - NORDVPN_COUNTRY=SE
+    - NORDVPN_PROTOCOL=tcp
+    - OPENVPN_PASSWORD=${transmissionopenvpn_OPENVPN_PASSWORD}
+    - OPENVPN_PROVIDER=NORDVPN
+    - OPENVPN_USERNAME=${transmissionopenvpn_OPENVPN_USERNAME}
+    - PGID=1000
+    - PUID=1000
+    - ratio-limit-enabled=1
+    - ratio-limit=0
+    - TRANSMISSION_DOWNLOAD_DIR=${transmissionopenvpn_TRANSMISSION_DOWNLOAD_DIR}
+    - TRANSMISSION_INCOMPLETE_DIR=${transmissionopenvpn_TRANSMISSION_INCOMPLETE_DIR}
+    - TRANSMISSION_RPC_AUTHENTICATION_REQUIRED=true
+    - TRANSMISSION_RPC_ENABLED=true
+    - TRANSMISSION_RPC_PASSWORD=${transmissionopenvpn_TRANSMISSION_RPC_PASSWORD}
+    - TRANSMISSION_RPC_USERNAME=${transmissionopenvpn_TRANSMISSION_RPC_USERNAME}
+    - TRANSMISSION_WATCH_DIR=${transmissionopenvpn_TRANSMISSION_WATCH_DIR}
+    - TZ=Europe/Stockholm
+    - WEBPROXY_ENABLED=false
+    ports:
+    - 9091:9091
+    cap_add:
+    - NET_ADMIN
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+    restart: unless-stopped
+  transmission-openvpn-proxy:
+    container_name: transmission-openvpn-proxy
+    image: 'haugene/transmission-openvpn-proxy:latest'
+    links:
+    - transmission-openvpn:transmission
+    volumes:
+    - transmission-openvpn-proxy:/data
+    ports:
+    - 8080:8080
+    restart: unless-stopped
 volumes:
-    media:
-        name: media
-        external: true
-    downloads:
-        name: downloads
-        external: true
-    transmission-openvpn:
-        name: transmission-openvpn
-        driver: local
-    transmission-openvpn_config:
-        name: transmission-openvpn_config
-        driver: local
-    transmission-openvpn-proxy:
-        name: transmission-openvpn
-        driver: local
-    jackett:
-        name: jackett
-        driver: local
-    radarr:
-        name: radarr
-        driver: local
-    sonarr:
-        name: sonarr
-        driver: local
+  downloads:
+    name: downloads
+    external: true
+  jackett:
+    name: jackett
+    driver: local
+    external: false
+  media:
+    name: media
+    external: true
+  radarr:
+    name: radarr
+    driver: local
+    external: false
+  sonarr:
+    name: sonarr
+    driver: local
+    external: false
+  transmission-openvpn:
+    name: transmission-openvpn
+    driver: local
+    external: false
+  transmission-openvpn_config:
+    name: transmission-openvpn_config
+    driver: local
+    external: false
+  transmission-openvpn-proxy:
+    name: transmission-openvpn
+    driver: local
+    external: false

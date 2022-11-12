@@ -1,22 +1,24 @@
 version: '3.3'
 services:
-    nginx-proxy-manager:
-        container_name: nginx-proxy-manager
-        image: 'jc21/nginx-proxy-manager:latest'
-        ports:
-        - '80:80'
-        - '81:81'
-        - '443:443'
-        volumes:
-        - 'nginx-proxy-manager:/data'
-        - 'nginx-proxy-manager_letsencrypt:/etc/letsencrypt'
-        environment:
-        - 'DISABLE_IPV6=true'
-        restart: always
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: 'jc21/nginx-proxy-manager:latest'
+    volumes:
+    - nginx-proxy-manager_letsencrypt:/etc/letsencrypt
+    - nginx-proxy-manager:/data
+    environment:
+    - DISABLE_IPV6=true
+    ports:
+    - 443:443
+    - 80:80
+    - 81:81
+    restart: always
 volumes:
-    nginx-proxy-manager:
-        name: nginx-proxy-manager
-        driver: local
-    nginx-proxy-manager_letsencrypt:
-        name: nginx-proxy-manager_letsencrypt
-        driver: local
+  nginx-proxy-manager:
+    name: nginx-proxy-manager
+    driver: local
+    external: false
+  nginx-proxy-manager_letsencrypt:
+    name: nginx-proxy-manager_letsencrypt
+    driver: local
+    external: false

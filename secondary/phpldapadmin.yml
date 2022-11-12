@@ -1,14 +1,14 @@
 version: '3.3'
 services:
-    phpldapadmin:
-        container_name: phpldapadmin
-        image: 'osixia/phpldapadmin:latest'
-        ports:
-        - '6443:443'
-        environment:
-        - 'PHPLDAPADMIN_LDAP_HOSTS=${phpldapadmin_PHPLDAPADMIN_LDAP_HOSTS}'
-        - 'LDAP_LOGIN_DN=${phpldapadmin_LDAP_LOGIN_DN}'
-        - 'LDAP_ADMIN_PASSWORD=${phpldapadmin_LDAP_ADMIN_PASSWORD}'
-        - 'LDAP_ORGANISATION=${phpldapadmin_LDAP_ORGANISATION}'
-        - 'LDAP_DOMAIN=${phpldapadmin_LDAP_DOMAIN}'
-        restart: unless-stopped
+  phpldapadmin:
+    container_name: phpldapadmin
+    image: 'osixia/phpldapadmin:latest'
+    environment:
+    - LDAP_ADMIN_PASSWORD=${phpldapadmin_LDAP_ADMIN_PASSWORD}
+    - LDAP_DOMAIN=${phpldapadmin_LDAP_DOMAIN}
+    - LDAP_LOGIN_DN=${phpldapadmin_LDAP_LOGIN_DN}
+    - LDAP_ORGANISATION=${phpldapadmin_LDAP_ORGANISATION}
+    - PHPLDAPADMIN_LDAP_HOSTS=${phpldapadmin_PHPLDAPADMIN_LDAP_HOSTS}
+    ports:
+    - 6443:443
+    restart: unless-stopped
