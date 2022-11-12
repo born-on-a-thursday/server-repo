@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+    homeassistant:
+        container_name: homeassistant
+        image: 'lscr.io/linuxserver/homeassistant:latest'
+        ports:
+        - '8123:8123'
+        network_mode: host
+        volumes:
+        - 'homeassistant:/config'
+        environment:
+        - 'PUID=1000'
+        - 'PGID=1000'
+        - 'TZ=Europe/Stockholm'
+        restart: unless-stopped
+    node-red:
+        container_name: node-red
+        image: 'nodered/node-red:latest'
+        ports:
+        - '1880:1880'
+        volumes:
+        - 'node-red:/data'
+        environment:
+        - 'TZ=Europe/Stockholm'
+        restart: unless-stopped
+volumes:
+    homeassistant:
+        name: homeassistant
+        driver: local
+    node-red:
+        name: node-red
+        driver: local
